@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/content_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.ms.favtodo.MainActivity"
+    android:background="@color/colorGrey200"
+    android:focusableInTouchMode="true"
+    tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/footer"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        >
+
+        <EditText
+            android:theme="@style/EditTextStyle"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="7"
+            android:id="@+id/quick_task"
+            android:hint="@string/quick_task_hint"
+            android:padding="@dimen/footer_margin"
+            android:maxLines="1"
+            android:textColor="@color/colorWhite"
+            />
+
+        <ImageButton
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/tick_btn"
+            android:src="@drawable/ic_done_white_24dp"
+            android:background="@color/colorPrimary"
+            android:padding="10dp"
+            android:scaleType="centerCrop"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_above="@id/footer"
+        android:id="@+id/shadow"
+        android:background="@drawable/shadow"
+       />
+
+   <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_tasks_todo"
+        android:id="@+id/no_tasks"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        />
+
+        <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_above="@id/shadow"
+           android:orientation="vertical"
+           >
+
+           <ListView android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                     android:id="@+id/todo_lists"
+                     android:dividerHeight="@dimen/divider_margin"
+                     android:divider="@android:color/transparent"
+                     android:paddingLeft="@dimen/listView_padding"
+                     android:paddingRight="@dimen/listView_padding"
+                     android:paddingTop="@dimen/listView_padding"
+               />
+       </LinearLayout>
+
+       <android.support.design.widget.FloatingActionButton
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:clickable="true"
+           app:fabSize="normal"
+           app:srcCompat="@android:drawable/ic_input_add"
+           android:id="@+id/fab"
+           android:tint="@android:color/white"
+           app:backgroundTint="@color/colorPrimary"
+           android:layout_above="@+id/footer"
+           android:layout_alignParentEnd="true"
+           android:layout_marginBottom="@dimen/activity_vertical_margin"
+           android:layout_marginEnd="@dimen/activity_vertical_margin"
+           />
+
+
+</RelativeLayout>

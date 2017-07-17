@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">FavToDo</string>
+    <string name="quick_task_hint">Enter Quick Task Here</string>
+    <string name="title_activity_new_task">New Task</string>
+    <string name="new_task_name">What is to be done?</string>
+    <string name="new_task_hint">Enter Task Here</string>
+    <string name="due_date">Due date</string>
+    <string name="new_date_hint">Date not set</string>
+    <string name="new_time_hint">Time not set</string>
+    <string name="add_task">Add Task</string>
+
+    <string name="delete_task">Delete Task</string>
+    <string name="title_activity_finished_tasks">FinishedTasks</string>
+    <string name="title_activity_main">FavToDo</string>
+
+    <string name="task_alert">Enter a task name</string>
+    <string name="task_finished_ques">Task finished?</string>
+    <string name="task_finished_excl">Task finished!</string>
+
+    <string name="no_tasks_todo">No tasks</string>
+    <string name="no_finished_tasks">No finished tasks</string>
+
+    <string name="overdue">Overdue</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This Week</string>
+    <string name="next_week">Next Week</string>
+    <string name="this_month">This Month</string>
+    <string name="next_month">Next Month</string>
+    <string name="later">Later</string>
+    <string name="no_date">No Date</string>
+
+    <string name="delete_alert">Are you sure to delete ?</string>
+    <string name="no_alert">No</string>
+    <string name="yes_alert">Yes</string>
+
+    <string-array name="spinner_list_items">
+        <item>All Tasks</item>
+        <item>Completed</item>
+    </string-array>
+</resources>
+

@@ -1,0 +1,54 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
+
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <!--<style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">-->
+        <!--<item name="android:colorAccent">@color/colorPrimary</item>-->
+    <!--</style>-->
+
+  <!--  <style name="FirstActTheme" parent="AppTheme.NoActionBar">
+       &lt;!&ndash; <item name="android:editTextStyle">@style/EditTextStyle</item>&ndash;&gt;
+    </style>-->
+
+    <style name="EditTextStyle">
+       <!-- <item name="android:textColor">@color/colorWhite</item>-->
+        <item name="android:textColorHint">@color/TxtWhiteTranser</item>
+        <item name="colorControlNormal">@color/TxtWhiteTrans</item>
+        <item name="colorControlActivated">@color/TxtWhiteTrans</item>
+        <item name="colorControlHighlight">@color/TxtWhiteTrans</item>
+    </style>
+
+    <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="SpinnerItem" parent="@android:style/Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+ <!--  <style name="checkBoxStyle" parent="Base.Theme.AppCompat">
+        <item name="android:textColorSecondary">@color/colorWhite</item>
+    </style>-->
+
+</resources>

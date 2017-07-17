@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:background="@drawable/rounded_corner"
+                 android:padding="@dimen/listView_padding"
+              >
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/task_done"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:text="Task Title"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/black"
+            android:layout_toEndOf="@+id/task_done"
+            android:paddingTop="@dimen/listItem_top_padding"
+            android:layout_marginStart="@dimen/listItem_left_padding"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/date_time"
+            android:text="Task Date and Time"
+            android:textColor="@color/colorPrimary"
+            android:layout_alignStart="@+id/title"
+            android:layout_below="@+id/title"
+            android:paddingBottom="@dimen/listItem_top_padding"
+            />
+
+</RelativeLayout>

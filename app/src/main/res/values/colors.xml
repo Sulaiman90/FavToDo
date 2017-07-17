@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="black">#000000</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="TxtWhiteTrans">#c0ffffff</color>
+    <color name="TxtWhiteTranser">#80ffffff</color>
+    <color name="colorPink">#E91E63</color>
+
+
+    <color name="date_picker_accent">#FFFFFF</color>
+    <color name="colorGrey200">#E0E0E0</color>
+    <color name="colorGrey100">#F5F5F5</color>
+    <color name="colorGrey600">#757575</color>
+    <color name="bg">#E0E0E0</color>
+
+    <color name="red">#F44336</color>
+
+</resources>
