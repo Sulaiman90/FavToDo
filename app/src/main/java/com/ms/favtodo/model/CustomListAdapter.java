@@ -148,7 +148,7 @@ public class CustomListAdapter extends BaseAdapter{
 
                 String result = taskOperation.checkDates(dateInMilliSeconds);
 
-                 Log.d(TAG,"Task Title "+taskDetails.getTitle() +" hour "+taskDetails.getTaskHour() + " minute "+taskDetails.getTaskMinute());
+               //  Log.d(TAG,"Task Title "+taskDetails.getTitle() +" hour "+taskDetails.getTaskHour() + " minute "+taskDetails.getTaskMinute());
 
                 if (result != "") {
                     viewHolder.tvdateTime.setVisibility(View.VISIBLE);
@@ -199,7 +199,7 @@ public class CustomListAdapter extends BaseAdapter{
                         } else {
                             values.put(TaskEntry.TASK_DONE, 0);
                         }
-                        dbHelper.updateTaskStatus(taskDetails.getTitle(), values);
+                        dbHelper.updateTask(taskDetails.getTaskId(), values);
                         View v1 = (View) v.getParent();
                         removeListItem(v1,position);
                     }
@@ -237,7 +237,6 @@ public class CustomListAdapter extends BaseAdapter{
 
             @Override
             public void run() {
-                // TODO Auto-generated method stub
                 taskList.remove(position);
                 notifyDataSetChanged();
                 animation.cancel();
@@ -256,28 +255,3 @@ public class CustomListAdapter extends BaseAdapter{
     }
 }
 
-
-/*int states[][] = {{android.R.attr.state_checked}, {}};
-                int colors[] = {R.color.black, R.color.colorPrimary};
-                CompoundButtonCompat.setButtonTintList(viewHolder.checkBox, new ColorStateList(states, colors));*/
-
-/*final Animation animation = AnimationUtils.loadAnimation(v1.getContext(), R.anim.slide_out);
-
-                        animation.setAnimationListener(new AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                taskList.remove(position);
-                                notifyDataSetChanged();
-                                taskOperation.retrieveTasks(completedTasksOnly);
-                            }
-                        });
-
-                        v1.startAnimation(animation);*/

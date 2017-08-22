@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -94,6 +95,10 @@ public class TaskOperation {
                     TaskDetails task = new TaskDetails();
                     task.setTitle(c1.getString(c1.getColumnIndexOrThrow(TaskEntry.TASK_TITLE)));
                     task.setDateAndTime(c1.getString(c1.getColumnIndexOrThrow(TaskEntry.TASK_DATE_AND_TIME)));
+
+                    Log.d(TAG,"Title "+c1.getString(c1.getColumnIndexOrThrow(TaskEntry.TASK_TITLE))
+                            + " date "+c1.getString(c1.getColumnIndexOrThrow(TaskEntry.TASK_DATE)));
+
                     task.setDate(c1.getString(c1.getColumnIndexOrThrow(TaskEntry.TASK_DATE)));
                     task.setTime(c1.getString(c1.getColumnIndexOrThrow(TaskEntry.TASK_TIME)));
                     task.setTaskDone(c1.getInt(c1.getColumnIndexOrThrow(TaskEntry.TASK_DONE)));
@@ -109,7 +114,7 @@ public class TaskOperation {
                         noDateTasks.add(task);
                     }
                     else if(isPassed(date,task.getTaskHour(),task.getTaskMinute())){
-                        Log.d(TAG,"isPassed:title "+task.getTitle() + " hour "+task.getTaskHour() + " minute "+task.getTaskMinute());
+                       // Log.d(TAG,"isPassed:title "+task.getTitle() + " hour "+task.getTaskHour() + " minute "+task.getTaskMinute());
                         overdueTasks.add(task);
                     }
                     else if(DateUtils.isToday(date)){
@@ -141,15 +146,8 @@ public class TaskOperation {
                 c1.close();
                 setInfoText(completedTasksOnly);
             }
-
         }
 
-       /* int listSize = overdueTasks.size();
-
-        for (int i = 0; i<listSize; i++){
-            Log.d(TAG,"overdue " +overdueTasks.get(i).getTitle());
-        }
-*/
        if(overdueTasks.size() > 0){
             finalTaskList.add(mContext.getResources().getString(R.string.overdue));
             finalTaskList.addAll(overdueTasks);
@@ -188,7 +186,6 @@ public class TaskOperation {
         }
 
         CustomListAdapter adapter;
-        //adapter = new CustomListAdapter(mContext,finalTaskList,completedTasksOnly);
         if(completedTasksOnly){
             adapter = new CustomListAdapter(mContext,taskList,true);
         }
@@ -209,7 +206,7 @@ public class TaskOperation {
                         Bundle bundle = new Bundle();
                         bundle.putString("title", tasks.getTitle());
                         Log.d(TAG,"Item:title "+tasks.getTitle() +" "+tasks.getDate());
-                        Log.d(TAG,"Item:ms "+tasks.getTaskDone() +" "+tasks.getDateInMilliSeconds());
+                        //Log.d(TAG,"Item:ms "+tasks.getTaskDone() +" "+tasks.getDateInMilliSeconds());
                         bundle.putInt("id", tasks.getTaskId());
                         bundle.putString("date", tasks.getDate());
                         bundle.putString("time", tasks.getTime());
@@ -219,7 +216,8 @@ public class TaskOperation {
                         bundle.putInt("minute", tasks.getTaskMinute());
 
                         intent.putExtras(bundle);
-                        mContext.startActivity(intent);
+                        //mContext.startActivity(intent);
+                        ((Activity) mContext).startActivityForResult(intent,MainActivity.TODO_REQUEST_CODE);
                     }
                 }
                 catch (Exception e) {
@@ -231,13 +229,22 @@ public class TaskOperation {
     }
 
     private void setInfoText(Boolean completedTasksOnly){
-        TextView noTasks = (TextView) ((Activity)mContext).findViewById(R.id.no_tasks);
-        noTasks.setVisibility(View.VISIBLE);
+        TextView noFinishedTasks = (TextView) ((Activity)mContext).findViewById(R.id.no_tasks);
+        LinearLayout mEmptyLayout = (LinearLayout) ((Activity)mContext).findViewById(R.id.toDoEmptyView);
+      /*  noTasks.setVisibility(View.VISIBLE);
         if(completedTasksOnly){
             noTasks.setText(mContext.getResources().getString(R.string.no_finished_tasks));
         }
         else{
             noTasks.setText(mContext.getResources().getString(R.string.no_tasks_todo));
+        }*/
+        if(completedTasksOnly){
+            noFinishedTasks.setVisibility(View.VISIBLE);
+            mEmptyLayout.setVisibility(View.GONE);
+        }
+        else {
+            mEmptyLayout.setVisibility(View.VISIBLE);
+            noFinishedTasks.setVisibility(View.GONE);
         }
     }
 
@@ -315,7 +322,7 @@ public class TaskOperation {
         int week2 = cal2.get(Calendar.WEEK_OF_YEAR);
 
         if(year1 == year2 && week2 == week1){
-            Log.d(TAG,"This week ");
+           // Log.d(TAG,"This week ");
             return true;
         }
         return false;
@@ -351,7 +358,7 @@ public class TaskOperation {
         int month2 = cal2.get(Calendar.MONTH) + 1;
 
         if(year1 == year2 && (month2 == month1)){
-            Log.d(TAG,"This month ");
+           // Log.d(TAG,"This month ");
             return true;
         }
         return false;
@@ -387,11 +394,11 @@ public class TaskOperation {
 
         // Log.d(TAG,"Next month "+year2 +" "+year1);
         if(year2 > year1){
-            Log.d(TAG,"After this current Year ");
+            //Log.d(TAG,"After this current Year ");
             return true;
         }
         else  if(year1 == year2 && (month2 > month1) && (month2-month1) > 1){
-            Log.d(TAG,"After next month ");
+           // Log.d(TAG,"After next month ");
             return true;
         }
         return false;
@@ -401,15 +408,16 @@ public class TaskOperation {
         Calendar now = Calendar.getInstance();
         int currentHour = now.get(Calendar.HOUR_OF_DAY);
         int currentMinute = now.get(Calendar.MINUTE);
-        if(hour < currentHour){
-            return true;
-        }
-        else if(hour == currentHour){
-            if(minute < currentMinute){
+        if(hour>=0 && minute>=0){
+            if(hour < currentHour){
                 return true;
             }
+            else if(hour == currentHour){
+                if(minute <= currentMinute){
+                    return true;
+                }
+            }
         }
-
         return false;
     }
 

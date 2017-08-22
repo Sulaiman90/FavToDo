@@ -86,13 +86,13 @@
                 />
 
             <ImageButton
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_clear_white_24dp"
                 android:background="@drawable/round_button"
                 android:padding="1dp"
                 android:layout_margin="8dp"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:id="@+id/clear_date"
                 />
 
@@ -102,7 +102,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="10"
             >
 
             <EditText
@@ -117,13 +116,13 @@
                 />
 
             <ImageButton
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_clear_white_24dp"
                 android:background="@drawable/round_button"
                 android:padding="1dp"
                 android:layout_margin="8dp"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:id="@+id/clear_time"
                 />
 
@@ -132,6 +131,3 @@
     </LinearLayout>
 
 </RelativeLayout>
-
-
-

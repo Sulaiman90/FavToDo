@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.BoolRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
@@ -55,12 +56,16 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton tickBtn;
     private FloatingActionButton fab;
     private LinearLayout footer;
-    private TextView noTasks;
+    private TextView noFinishedTasks;
 
     private String todoTitle;
 
     private Boolean mIsSpinnerFirstCall = true;
     private Boolean completedTasksOnly = false;
+
+    private LinearLayout mEmptyLayout;
+
+    public static final int TODO_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
         quickTask = (EditText) findViewById(R.id.quick_task);
         tickBtn = (ImageButton) findViewById(R.id.tick_btn);
         footer = (LinearLayout) findViewById(R.id.footer);
-        noTasks = (TextView) findViewById(R.id.no_tasks);
+        noFinishedTasks = (TextView) findViewById(R.id.no_tasks);
+        mEmptyLayout = (LinearLayout) findViewById(R.id.toDoEmptyView);
 
         tickBtn.setVisibility(View.GONE);
 
@@ -86,15 +92,16 @@ public class MainActivity extends AppCompatActivity {
             loadTasks();
         }
         else{
-            setInfoText(completedTasksOnly);
+            showHideEmptyViews(true,completedTasksOnly);
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+               // Log.d(TAG,"started activity ");
                 Intent intent = new Intent(MainActivity.this,NewTask.class);
                 intent.putExtra("NewTask",true);
-                startActivity(intent);
+                startActivityForResult(intent,TODO_REQUEST_CODE);
             }
         });
 
@@ -121,10 +128,19 @@ public class MainActivity extends AppCompatActivity {
                 tickBtn.setVisibility(View.GONE);
                 hideDefaultKeyboard();
                 loadTasks();
-                noTasks.setVisibility(View.GONE);
+                showHideEmptyViews(false,completedTasksOnly);
             }
         });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG,"requestCode "+requestCode +" resultCode "+resultCode);
+        if(requestCode==TODO_REQUEST_CODE && resultCode == RESULT_OK){
+            loadTasks();
+        }
+        quickTask.setText("");
+        hideDefaultKeyboard();
     }
 
     @Override
@@ -171,25 +187,42 @@ public class MainActivity extends AppCompatActivity {
     private void loadTasks(){
         int totalTasks = taskOperation.retrieveTasks(completedTasksOnly);
         if(totalTasks==0){
-            setInfoText(completedTasksOnly);
+            showHideEmptyViews(true,completedTasksOnly);
         }
         else{
-            noTasks.setVisibility(View.GONE);
+            showHideEmptyViews(false,completedTasksOnly);
+        }
+    }
+
+    private void showHideEmptyViews(Boolean show,Boolean finishedTasks){
+        if(show){
+            if(finishedTasks){
+                noFinishedTasks.setVisibility(View.VISIBLE);
+                mEmptyLayout.setVisibility(View.GONE);
+            }
+            else {
+                mEmptyLayout.setVisibility(View.VISIBLE);
+                noFinishedTasks.setVisibility(View.GONE);
+            }
+        }
+        else{
+            noFinishedTasks.setVisibility(View.GONE);
+            mEmptyLayout.setVisibility(View.GONE);
         }
     }
 
     private void setInfoText(Boolean completedTasksOnly){
-        noTasks.setVisibility(View.VISIBLE);
+        noFinishedTasks.setVisibility(View.VISIBLE);
         if(completedTasksOnly){
-            noTasks.setText(getResources().getString(R.string.no_finished_tasks));
+            noFinishedTasks.setText(getResources().getString(R.string.no_finished_tasks));
         }
         else{
-            noTasks.setText(getResources().getString(R.string.no_tasks_todo));
+            noFinishedTasks.setText(getResources().getString(R.string.no_tasks_todo));
         }
     }
 
     private void checkIfTextEntered(){
-        todoTitle = quickTask.getText().toString();
+        todoTitle = quickTask.getText().toString().trim();
         if(todoTitle.matches("")){
             tickBtn.setVisibility(View.GONE);
         }
@@ -199,16 +232,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveQuickTodo(String todoTitle){
-        dbHelper.insertTask(todoTitle,"","","",0,0,0,0);
+        dbHelper.insertTask(todoTitle,"","","",0,0,-1,-1);
     }
 
     private void hideDefaultKeyboard() {
-        // Check if no view has focus:
-       /* View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }*/
         taskOperation.hideKeyboard(MainActivity.this);
     }
 

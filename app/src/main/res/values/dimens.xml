@@ -8,6 +8,7 @@
     <dimen name="footer_margin">12dp</dimen>
 
     <dimen name="listView_padding">4dp</dimen>
+    <dimen name="listView_margin_horizontal">8dp</dimen>
 
     <dimen name="divider_margin">10dp</dimen>
 

@@ -9,6 +9,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ms.favtodo.MainActivity"
     android:background="@color/colorGrey200"
+
     android:focusableInTouchMode="true"
     tools:showIn="@layout/activity_main">
 
@@ -35,13 +36,18 @@
 
         <ImageButton
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
             android:id="@+id/tick_btn"
-            android:src="@drawable/ic_done_white_24dp"
-            android:background="@color/colorPrimary"
-            android:padding="10dp"
-            android:scaleType="centerCrop"/>
+            android:background="@drawable/ic_done_white_24dp"
+           />
 
     </LinearLayout>
 
@@ -53,34 +59,59 @@
         android:background="@drawable/shadow"
        />
 
-   <TextView
+    <LinearLayout
+        android:id="@+id/toDoEmptyView"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+       <!-- <ImageView
+            android:src="@drawable/empty_view_bg"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />-->
+        <TextView
+            android:text="@string/no_tasks_todo"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp"
+            android:paddingTop="4dp"
+            android:paddingBottom="8dp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/no_tasks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_tasks_todo"
-        android:id="@+id/no_tasks"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-        android:gravity="center_horizontal"
         android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:text="@string/no_finished_tasks"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
         android:visibility="gone"
         />
 
-        <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_above="@id/shadow"
-           android:orientation="vertical"
-           >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/shadow"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-           <ListView android:layout_width="fill_parent"
-                     android:layout_height="fill_parent"
-                     android:id="@+id/todo_lists"
-                     android:dividerHeight="@dimen/divider_margin"
-                     android:divider="@android:color/transparent"
-                     android:paddingLeft="@dimen/listView_padding"
-                     android:paddingRight="@dimen/listView_padding"
-                     android:paddingTop="@dimen/listView_padding"
-               />
-       </LinearLayout>
+        <ListView
+            android:id="@+id/todo_lists"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="@dimen/divider_margin"
+            android:paddingLeft="@dimen/listView_margin_horizontal"
+            android:paddingRight="@dimen/listView_margin_horizontal"
+            android:paddingTop="@dimen/listView_padding"
+            android:visibility="visible"/>
+    </LinearLayout>
 
        <android.support.design.widget.FloatingActionButton
            android:layout_width="wrap_content"
@@ -90,12 +121,11 @@
            app:srcCompat="@android:drawable/ic_input_add"
            android:id="@+id/fab"
            android:tint="@android:color/white"
-           app:backgroundTint="@color/colorPrimary"
+           app:backgroundTint="@color/floating_btn"
            android:layout_above="@+id/footer"
            android:layout_alignParentEnd="true"
            android:layout_marginBottom="@dimen/activity_vertical_margin"
            android:layout_marginEnd="@dimen/activity_vertical_margin"
            />
-
 
 </RelativeLayout>

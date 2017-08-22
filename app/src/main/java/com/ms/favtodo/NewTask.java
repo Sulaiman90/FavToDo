@@ -19,6 +19,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -57,6 +58,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 
+import static java.security.AccessController.getContext;
+
 public class NewTask extends AppCompatActivity {
 
     private static final String TAG = "FavDo_NewTask";
@@ -74,17 +77,17 @@ public class NewTask extends AppCompatActivity {
 
     private Boolean newTask = false;
 
+    private Toast toastobject;
+
     private DialogFragment mDialog;
 
     private static long dateInMillis = 0;
-    private static int taskHour = -1;
-    private static int taskMinute = -1;
+    public static int taskHour = -1;
+    public static int taskMinute = -1;
 
-    private static String dateText;
+    private static String dateText = "";
     private static String timeText;
     private int taskId = 0;
-
-    private static String[] date = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +96,6 @@ public class NewTask extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       // toolbar.setBackgroundColor(ContextCompat.getColor(this,R.color.red));
-       // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
 
         dbHelper = new TaskDbHelper(this);
 
@@ -143,7 +144,7 @@ public class NewTask extends AppCompatActivity {
                 mTaskDone.setChecked(false);
             }
 
-            Log.d(TAG, "Date " + extras.getString("date") +" time "+timeText);
+            Log.d(TAG,"Title " +extras.getString("title") + " Date " + extras.getString("date") +" time "+timeText);
 
             if (!dateText.matches("")) {
                 showHideButtons(mClearDate, true);
@@ -184,8 +185,8 @@ public class NewTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 taskOperation.hideKeyboard(NewTask.this);
-                String stringDone = getResources().getString(R.string.task_finished_ques);
-                String stringNotDone = getResources().getString(R.string.task_finished_excl);
+                String stringDone = getResources().getString(R.string.task_finished_excl);
+                String stringNotDone = getResources().getString(R.string.task_finished_ques);
                 if (mTaskDone.isChecked()) {
                     mTaskStatus.setText(stringDone);
                     mTaskStatus.setTypeface(null, Typeface.BOLD);
@@ -267,17 +268,21 @@ public class NewTask extends AppCompatActivity {
     }
 
     private void saveTodo() {
-        String todoTitle = mTitleText.getText().toString();
+        String todoTitle = mTitleText.getText().toString().trim();
         String todoDate = "";
         String todoTime = "";
         String todoDateAndTime = "";
         int todoFinished = 0;
 
-
         //Log.d(TAG,"time "+todoTitle);
         if (!TextUtils.isEmpty(todoTitle)) {
-            //todoDate = mDateText.getText().toString();
-            todoDate = dateText;
+            if(dateText!= null){
+                todoDate = dateText;
+            }
+            else{
+                todoDate = "";
+            }
+
             todoTime = mTimeText.getText().toString();
             if (!TextUtils.isEmpty(todoTime)) {
                 todoDateAndTime = todoDate + ", " + todoTime;
@@ -291,8 +296,8 @@ public class NewTask extends AppCompatActivity {
             }
             //Toast.makeText(getApplicationContext(),todoDateAndTime,Toast.LENGTH_LONG).show();
             // Log.d(TAG,"time "+todoDateAndTime +" "+dateInMillis);
-            Log.d(TAG, "date & time " + todoDate + " " + todoTime);
-            Log.d(TAG, "taskHour " + taskHour + " taskMinute " + taskMinute);
+           // Log.d(TAG, "date & time " + todoDate + " " + todoTime);
+          //  Log.d(TAG, "taskHour " + taskHour + " taskMinute " + taskMinute);
 
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -306,18 +311,25 @@ public class NewTask extends AppCompatActivity {
             values.put(TaskEntry.TASK_MINUTE, taskMinute);
 
             if (newTask) {
-                //db.insert(TaskEntry.TABLE_NAME, null, values);
-                // dbHelper.insertTask(todoTitle,todoDate,todoTime,todoDateAndTime,todoFinished,dateInMillis);
                 dbHelper.insertTask(values);
             } else {
                 dbHelper.updateTask(taskId, values);
             }
             db.close();
 
-            Intent intent = new Intent(NewTask.this, MainActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent();
+            setResult(RESULT_OK,intent);
+            finish();
+
         } else {
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.task_alert), Toast.LENGTH_SHORT).show();
+            Vibrator v = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for specific milliseconds
+            v.vibrate(100);
+            if(toastobject!= null){
+                toastobject.cancel();
+            }
+            toastobject = Toast.makeText(getApplicationContext(), getResources().getString(R.string.task_alert), Toast.LENGTH_SHORT);
+            toastobject.show();
         }
     }
 
@@ -325,9 +337,10 @@ public class NewTask extends AppCompatActivity {
         if(delete) {
             String todoTitle = mTitleText.getText().toString();
             int deleteCount = dbHelper.deleteTask(taskId);
-            Log.i(TAG, "task deleted " + deleteCount);
-            Intent intent = new Intent(NewTask.this, MainActivity.class);
-            startActivity(intent);
+           // Log.i(TAG, "task deleted " + deleteCount);
+            Intent intent = new Intent();
+            setResult(RESULT_OK,intent);
+            finish();
         }
         else{
             mDialog.dismiss();
@@ -345,6 +358,7 @@ public class NewTask extends AppCompatActivity {
     public void resetTexts(){
         mDateText.setText("");
         dateText = "";
+        dateInMillis = 0;
         resetTimeText();
     }
 
@@ -353,7 +367,6 @@ public class NewTask extends AppCompatActivity {
         timeText = "";
         taskHour = -1;
         taskMinute = -1;
-        mTimeText.setTextColor(ContextCompat.getColor(NewTask.this, R.color.black));
     }
 
     public void resetTextColors(){
@@ -370,6 +383,7 @@ public class NewTask extends AppCompatActivity {
         }
         if(!mTaskDone.isChecked()) {
             if (taskOperation.isDatePassed(date)) {
+                Log.d(TAG,"isDatePassed ");
                 mDateText.setTextColor(ContextCompat.getColor(mDateText.getContext(), R.color.red));
                 mTimeText.setTextColor(ContextCompat.getColor(mTimeText.getContext(), R.color.red));
             } else {
@@ -381,7 +395,7 @@ public class NewTask extends AppCompatActivity {
 
     public static void checkIfTimePassed(int selectedHour, int selectedMinute) {
         if(!mTaskDone.isChecked() && DateUtils.isToday(dateInMillis)){
-            Log.d(TAG,"isTimePassed "+taskOperation.isTimePassed(selectedHour,selectedMinute));
+            Log.d(TAG,"isTimePassed "+selectedHour +" "+selectedMinute);
             if(taskOperation.isTimePassed(selectedHour,selectedMinute)){
                 mDateText.setTextColor(ContextCompat.getColor(mDateText.getContext(), R.color.red));
                 mTimeText.setTextColor(ContextCompat.getColor(mTimeText.getContext(), R.color.red));
@@ -400,8 +414,14 @@ public class NewTask extends AppCompatActivity {
     }
 
     public void showTimePickerDialog() {
+        Log.d(TAG,"showTimePickerDialog");
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
+    }
+
+
+    private static void showDebugToast(String msg){
+        Toast.makeText(mTimeText.getContext(),msg,Toast.LENGTH_LONG).show();
     }
 
     // DialogFragment used to pick a ToDoItem deadline date
@@ -415,11 +435,17 @@ public class NewTask extends AppCompatActivity {
             // Use the current date as the default date in the picker
 
             final Calendar c = Calendar.getInstance();
+
+           // Log.d(TAG,"DatePickerFragment");
+
+            if(!TextUtils.isEmpty(mDateText.getText().toString())){
+                c.setTimeInMillis(dateInMillis);
+            }
+
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
             int dayName = c.get(Calendar.DAY_OF_WEEK);
-
 
             // Create a new instance of DatePickerDialog and return it
             return new DatePickerDialog(getActivity(), this, year, month, day);
@@ -473,6 +499,7 @@ public class NewTask extends AppCompatActivity {
         return dayName + ", " + mon + " " + day + ", " + year;
     }
 
+
     public static class TimePickerFragment extends DialogFragment
             implements OnTimeSetListener {
 
@@ -482,6 +509,27 @@ public class NewTask extends AppCompatActivity {
             final Calendar c = Calendar.getInstance();
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
+
+            Log.d(TAG," mTimeText "+hour);
+            showDebugToast(String.valueOf(hour));
+            if(TextUtils.isEmpty(mTimeText.getText().toString())){
+                minute = 0;
+                if(DateUtils.isToday(dateInMillis)){
+                    if(hour >= 22){
+                        hour = 23;
+                    }
+                    else{
+                        hour = hour + 2;
+                    }
+                }
+                else{
+                    hour = 12;
+                }
+            }
+            else{
+                hour = taskHour;
+                minute = taskMinute;
+            }
 
             // Create a new instance of TimePickerDialog and return it
             return new TimePickerDialog(getActivity(), this, hour, minute, false
@@ -523,7 +571,7 @@ public class NewTask extends AppCompatActivity {
 
            // Log.d(TAG,"timeString "+timeString);
 
-            Log.d(TAG," selectedHour "+selectedHour + " selectedMinute "+selectedMinute);
+          //  Log.d(TAG," selectedHour "+selectedHour + " selectedMinute "+selectedMinute);
            // Log.d(TAG,"isPassed "+taskOperation.isPassed(dateInMillis));
 
             checkIfTimePassed(taskHour,taskMinute);
